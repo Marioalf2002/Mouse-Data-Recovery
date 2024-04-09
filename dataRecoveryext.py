@@ -11,7 +11,7 @@ def recover_files(drive, signature, output_dir):
         found = byte.find(bytes.fromhex(signature))
         if found >= 0:
             drec = True
-            print(f'==== Found file at location: {str(hex(found+(size*offs)))} ====')
+            print(f'=============> Archivo encontrado en la ubicación: {str(hex(found+(size*offs)))} <=============')
             fileN = open(os.path.join(output_dir, f'{rcvd}.{signature.lower()}'), "wb")
             fileN.write(byte[found:])
             while drec:
@@ -20,7 +20,7 @@ def recover_files(drive, signature, output_dir):
                 if bfind >= 0:
                     fileN.write(byte[:bfind+len(bytes.fromhex(''.join(signature.split())))])
                     fileD.seek((offs+1)*size)
-                    print(f'==== Wrote file to location: {rcvd}.{signature.lower()} ====\n')
+                    print(f'=============> Escribiendo archivo en la ubicación: {rcvd}.{signature.lower()} <=============\n')
                     drec = False
                     rcvd += 1
                     fileN.close()
@@ -32,10 +32,14 @@ def recover_files(drive, signature, output_dir):
 
 # Lista de tipos de archivo con sus respectivas firmas hexadecimales
 tipos_archivo = [
+    ("AI", "255044462D312E"),
+    ("EPS", "252150532D41646F6265"),
+    ("INDD", "06054B50"),
+    ("PSD", "38425053"),
+    ("PDF", "25504446"),
     ("JPEG", "FFD8FFE0"),
     ("PNG", "89504E470D0A1A0A"),
     ("GIF", "47494638"),
-    ("PDF", "25504446"),
     ("MP3", "FFF8"),
     ("MP4", "66747970"),
     ("JPEG2000", "0000000C6A502020"),
@@ -48,10 +52,6 @@ tipos_archivo = [
     ("MOV", "6D6F6F76"),
     ("WMV", "3026B275"),
     ("EXE", "4D5A"),
-    ("AI", "255044462D312E"),
-    ("EPS", "252150532D41646F6265"),
-    ("INDD", "06054B50"),
-    ("PSD", "38425053"),
     ("PDF", "25504446"),
     ("AIFF", "464F524D00"),
     ("INDD", "494E4444"),
