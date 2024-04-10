@@ -1,6 +1,6 @@
 import os
 
-def recover_files(drive, signature, output_dir):
+def recover_files(drive, signature, tipo, output_dir):
     fileD = open(drive, "rb")
     size = 512
     byte = fileD.read(size)
@@ -12,15 +12,16 @@ def recover_files(drive, signature, output_dir):
         if found >= 0:
             drec = True
             print(f'=============> Archivo encontrado en la ubicación: {str(hex(found+(size*offs)))} <=============')
-            fileN = open(os.path.join(output_dir, f'{rcvd}.{signature.lower()}'), "wb")
+            fileN = open(os.path.join(output_dir, f'{rcvd}.{tipo.lower()}'), "wb")
+
             fileN.write(byte[found:])
             while drec:
                 byte = fileD.read(size)
-                bfind = byte.find(bytes.fromhex(''.join(signature.split())))
+                bfind = byte.find(bytes.fromhex(signature))
                 if bfind >= 0:
-                    fileN.write(byte[:bfind+len(bytes.fromhex(''.join(signature.split())))])
+                    fileN.write(byte[:bfind+len(bytes.fromhex(signature))])
                     fileD.seek((offs+1)*size)
-                    print(f'=============> Escribiendo archivo en la ubicación: {rcvd}.{signature.lower()} <=============\n')
+                    print(f'=============> Escribiendo archivo en la ubicación: {rcvd}.{tipo.lower()} <=============\n')
                     drec = False
                     rcvd += 1
                     fileN.close()
@@ -32,13 +33,13 @@ def recover_files(drive, signature, output_dir):
 
 # Lista de tipos de archivo con sus respectivas firmas hexadecimales
 tipos_archivo = [
+    ("PNG", "89504E470D0A1A0A"),
     ("AI", "255044462D312E"),
     ("EPS", "252150532D41646F6265"),
     ("INDD", "06054B50"),
     ("PSD", "38425053"),
     ("PDF", "25504446"),
     ("JPEG", "FFD8FFE0"),
-    ("PNG", "89504E470D0A1A0A"),
     ("GIF", "47494638"),
     ("MP3", "FFF8"),
     ("MP4", "66747970"),
@@ -84,4 +85,4 @@ ruta_salida_base = "D:\\recuperados"
 for tipo, firma_hex in tipos_archivo:
     ruta_salida = os.path.join(ruta_salida_base, tipo)
     os.makedirs(ruta_salida, exist_ok=True)  # Crear la carpeta si no existe
-    recover_files(drive, firma_hex, ruta_salida)
+    recover_files(drive, firma_hex, tipo, ruta_salida)
