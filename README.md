@@ -41,8 +41,8 @@ Thanks to the following people for their contributions to this project!
   - [Buffer Size](#buffer-size)
   - [Testing](#testing)
   - [Hexadecimal Signatures](#hexadecimal-signatures)
-- [Tipos de Archivos y Firmas Hexadecimal / File Types and Hexadecimal Signatures](#tipos-de-archivos-y-firmas-hexadecimal---file-types-and-hexadecimal-signatures)
 - [Copyrigth and License](#copyrigth-and-License)
+- [Tipos de Archivos y Firmas Hexadecimal / File Types and Hexadecimal Signatures](#tipos-de-archivos-y-firmas-hexadecimal---file-types-and-hexadecimal-signatures)
 
 # ESPAÑOL
 
@@ -259,6 +259,13 @@ tipos_archivo = [
 ```
 
 </br>
+
+## Copyrigth and License
+
+Copyright © 2024 - [Mario Hernandez](https://github.com/Marioalf2002)
+
+This code is licensed under the [GNU General Public License v3.0](LICENSE.md).</br>
+Este código tiene licencia bajo la [GNU General Public License v3.0](LICENSE.md).
 
 ## Tipos de Archivos y Firmas Hexadecimal - File Types and Hexadecimal Signatures
 
@@ -2432,10 +2439,3 @@ There may be other file types whose hexadecimal signatures are not included in t
 <td>ASTM E57 3D file format
 </td></tr></tbody><tfoot></tfoot></table>
 </table>
-
-## Copyrigth and License
-
-Copyright © 2024 - [Mario Hernandez](https://github.com/Marioalf2002)
-
-This code is licensed under the [GNU General Public License v3.0](LICENSE.md).</br>
-Este código tiene licencia bajo la [GNU General Public License v3.0](LICENSE.md).
