@@ -42,10 +42,11 @@ Thanks to the following people for their contributions to this project!
   - [Testing](#testing)
   - [Hexadecimal Signatures](#hexadecimal-signatures)
 - [Tipos de Archivos y Firmas Hexadecimal / File Types and Hexadecimal Signatures](#tipos-de-archivos-y-firmas-hexadecimal---file-types-and-hexadecimal-signatures)
+- [Copyrigth and License](#copyrigth-and-License)
 
 # ESPAÑOL
 
-## Mouse Data Recovery {#mouse-data-recovery-es}
+## Mouse Data Recovery ES
 
 Este código proporciona una funcionalidad para recuperar archivos específicos de un disco duro o memoria USB, utilizando firmas hexadecimales para identificar tipos de archivos. Aquí está la explicación detallada:
 
@@ -151,7 +152,7 @@ tipos_archivo = [
 
 # ENGLISH
 
-## Mouse Data Recovery {#mouse-data-recovery-en}
+## Mouse Data Recovery EN
 
 This code provides functionality to recover specific files from a hard drive or USB stick, using hexadecimal signatures to identify file types. Here is the detailed explanation:
 
