@@ -1,18 +1,17 @@
 <div align="center">
     <img src="img/DataRecovery.jpg" alt="Data Recovery" width="70%">
-    
-</div>
-</br>
+
 </br>
 
-<div align="center">
+[![Vistas del repositorio](https://komarev.com/ghpvc/?username=Marioalf2002&label=Vistas+Mouse+Data+Recovery)](https://github.com/Marioalf2002/Mouse-Data-Recovery)
+[![Estrellas del repositorio](https://img.shields.io/github/stars/Marioalf2002/Mouse-Data-Recovery.svg?style=social)](https://github.com/Marioalf2002/Mouse-Data-Recovery)
 
-## Contribuidores / Contributors
+<!-- ## Contribuidores / Contributors
 
 ¡Gracias a las siguientes personas por sus contribuciones a este proyecto!<br>
 Thanks to the following people for their contributions to this project!
 
-[![Contribuidores](https://contrib.rocks/image?repo=Marioalf2002/Data_Recovery)](https://github.com/Marioalf2002/Data_Recovery/graphs/contributors)
+[![Contribuidores](https://contrib.rocks/image?repo=Marioalf2002/Data_Recovery)](https://github.com/Marioalf2002/Data_Recovery/graphs/contributors) -->
 
 </div>
 </br>
