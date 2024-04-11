@@ -1,3 +1,10 @@
+<div align="center">
+    <img src="img/license.jpg" alt="Data Recovery" width="70%">
+    
+</br>
+</br>
+</div>
+
 # LICENSE - Mouse Data Recovery
 
 Se debe cumplir con la licencia de este proyecto. A continuación, se proporciona el texto completo de la licencia:
