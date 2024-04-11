@@ -2,6 +2,7 @@
     <img src="img/DataRecovery.jpg" alt="Data Recovery" width="70%">
 
 </br>
+</br>
 
 [![Vistas del repositorio](https://komarev.com/ghpvc/?username=Marioalf2002&label=Vistas+Mouse+Data+Recovery)](https://github.com/Marioalf2002/Mouse-Data-Recovery)
 [![Estrellas del repositorio](https://img.shields.io/github/stars/Marioalf2002/Mouse-Data-Recovery.svg?style=social)](https://github.com/Marioalf2002/Mouse-Data-Recovery)
