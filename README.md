@@ -1,19 +1,242 @@
-# FIRMAS HEXADECIMALES
+<div align="center">
+    <img src="DataRecovery.jpg" alt="Data Recovery" width="70%">
+</div>
+
+# ESPAÑOL
+
+## Tabla de Contenido
+
+- [Español](#español)
+  - [Recuperador de Almacenamiento](#recuperador-de-almacenamiento)
+  - [Tamaño Buffer](#tamaño-buffer)
+  - [Pruebas](#pruebas)
+  - [Firmas Hexadecimales](#firmas-hexadecimales)
+- [Ingles](#ingles)
+  - [Data Recovery](#data-recovery)
+  - [Buffer Size](#buffer-size)
+  - [Testing](#testing)
+  - [Hexadecimal Signatures](#hexadecimal-signatures)
+
+## Recuperador de Almacenamiento
+
+Este código proporciona una funcionalidad para recuperar archivos específicos de un disco duro o memoria USB, utilizando firmas hexadecimales para identificar tipos de archivos. Aquí está la explicación detallada:
+
+Importación de módulos: El código comienza importando los módulos necesarios:
+
+- **OS:** Permite interactuar con el sistema operativo.
+- **Time:** Proporciona funciones para trabajar con fechas y horas.
+- **Timedelta:** Una clase para representar intervalos de tiempo.
+- **Hashlib:** Permite calcular resúmenes de mensajes y códigos hash.
+- **Variables globales:** Se define una variable size que determina el tamaño del bloque de lectura. Esto puede ajustarse dependiendo de la capacidad del disco duro o memoria USB.
+
+**Función de formato de tiempo:** strfdelta es una función auxiliar que formatea un objeto timedelta en una cadena legible.
+
+**Función de generación de hash de archivo:** generate_file_hash calcula el hash MD5 de un archivo dado. Utiliza el módulo hashlib para generar el hash del contenido del archivo en formato hexadecimal.
+
+**Función de recuperación de archivos:** recover_files es la función principal que realiza la recuperación de archivos. Recibe como entrada la ruta del disco duro o memoria USB (drive), la firma hexadecimal del tipo de archivo a buscar (signature), el tipo de archivo (tipo), y el directorio de salida para los archivos recuperados (output_dir).
+
+Lee el disco duro o memoria USB en bloques de tamaño size.
+Busca la firma hexadecimal en cada bloque leído.
+Cuando encuentra la firma, recupera el archivo asociado.
+Escribe el archivo recuperado en el directorio de salida.
+
+**Lista de tipos de archivo y firmas hexadecimales:** main define una lista de tipos de archivo junto con sus respectivas firmas hexadecimales. Esta lista se utiliza para iterar sobre cada tipo de archivo y recuperarlos del disco duro o memoria USB.
+
+## Tamaño Buffer
+
+La cantidad de bytes a leer depende de la capacidad del disco duro o memoria USB. También depende de la cantidad de RAM que tenga el sistema operativo.
+
+- Gama Baja, se recomienda leer entre 512 bytes y 2048 bytes.</br>
+- Gama Media, se recomienda leer entre 2048 bytes y 8192 bytes.</br>
+- Gama Alta, se recomienda leer entre 8192 bytes y 65536 bytes o más.</br>
+
+En este caso, el código establece la variable de tamaño en 16777216, que corresponde a un tamaño de bloque de 16 megabytes. Este valor se puede ajustar en función de los requisitos específicos de la aplicación o sistema.
+
+## Pruebas
+
+Pruebas realizadas en un Acer Nitro 5 AN515-58 con las siguientes especificaciones:
+
+- Procesador: i5-12500H 3.10 GHz
+- Almacenamiento: M.2 Nvme 500GB
+- Tarjeta gráfica: RTX3050
+- Memoria RAM: 32GB
+
+se obtuvieron buenos resultados utilizando un tamaño de bloque de 16 megabytes.
+
+![pruebas](prueba.jpeg)
+
+## Firmas Hexadecimales
+
+A continuación se muestra una lista de tipos de archivo admitidos junto con sus respectivas firmas hexadecimales. Estas firmas se utilizan para identificar los tipos de archivos durante el proceso de recuperación. Puedes agregar o modificar esta lista según tus necesidades:
+
+Puedes habilitar o deshabilitar tipos de archivo adicionales editando esta lista. Asegúrate de que las firmas hexadecimales sean correctas para evitar problemas durante el proceso de recuperación.
+
+**IMPORTANTE:** No repita tipos de archivos en la lista. Asegúrese de que las firmas hexadecimales sean correctas para evitar problemas durante el proceso de recuperación.
+
+Ejemplo:
+
+```
+tipos_archivo = [
+        ("JPEG", "FFD8FFE0"),  # Archivo de imagen JPEG
+        ("PNG", "89504E470D0A1A0A"),  # Archivo de imagen PNG
+        ("AI", "255044462D312E"),  # Archivo Adobe Illustrator
+        ("EPS", "252150532D41646F6265"),  # Archivo Encapsulated PostScript
+        ("INDD", "06054B50"),  # Archivo Adobe InDesign
+        ("PSD", "38425053"),  # Archivo Adobe Photoshop
+        ("PDF", "25504446"),  # Archivo Adobe PDF
+        ("BMP", "424D"),  # Archivo de imagen BMP
+        ("TIFF", "49492A00"),  # Archivo de imagen TIFF (Intel)
+        ("TIFF", "4D4D002A"),  # Archivo de imagen TIFF (Motorola)
+        ("FLA", "464C5601"),  # Archivo Adobe Flash FLA
+        ("SWF", "435753"),  # Archivo Adobe Flash SWF
+        ("F4V", "464432"),  # Archivo de video Adobe Flash F4V
+        ("GIF", "47494638"),  # Archivo de imagen GIF
+        ("MP3", "FFF8"),  # Archivo de audio MP3
+        ("MP4", "66747970"),  # Archivo de video MP4
+        ("JPEG2000", "0000000C6A502020"),  # Archivo de imagen JPEG2000
+        ("AVI", "52494646"),  # Archivo de video AVI
+        ("WAV", "52494646"),  # Archivo de audio WAV
+        ("FLAC", "664C6143"),  # Archivo de audio FLAC
+        # ("MOV", "6D6F6F76"),  # Archivo de video QuickTime MOV
+        # ("WMV", "3026B275"),  # Archivo de video Windows Media WMV
+        # ("EXE", "4D5A"),  # Archivo ejecutable EXE
+        # ("AIFF", "464F524D00"),  # Archivo de audio AIFF
+        # ("ZIP", "504B0304"),  # Archivo comprimido ZIP
+        # ("RAR", "526172211A0700"),  # Archivo comprimido RAR
+        # ("7Z", "377ABCAF271C"),  # Archivo comprimido 7Z
+        # ("TAR", "7573746172"),  # Archivo comprimido TAR
+        # ("GZ", "1F8B0800"),  # Archivo comprimido GZ
+        # ("XZ", "FD377A585A00"),  # Archivo comprimido XZ
+        # ("TAR.GZ", "1F8B080000000000"),  # Archivo comprimido TAR.GZ
+        # ("TAR.XZ", "FD377A585A00"),  # Archivo comprimido TAR.XZ
+        # ("TAR.BZ2", "425A68"),  # Archivo comprimido TAR.BZ2
+        # ("DOCX", "504B0304"),  # Archivo de documento Microsoft Word DOCX
+        # ("XLSX", "504B0304"),  # Archivo de documento Microsoft Excel XLSX
+        # ("PPTX", "504B0304"),  # Archivo de documento Microsoft PowerPoint PPTX
+        # ("ODT", "504B0304"),  # Archivo de documento OpenDocument ODT
+        # ("ODS", "504B0304"),  # Archivo de documento OpenDocument ODS
+        # ("ODP", "504B0304"),  # Archivo de documento OpenDocument ODP
+    ]
+```
+
+# INGLES
+
+## Data Recovery
+
+This code provides functionality to recover specific files from a hard drive or USB stick, using hexadecimal signatures to identify file types. Here is the detailed explanation:
+
+Importing modules: The code begins by importing the necessary modules:
+
+- **OS:** Allows you to interact with the operating system.
+- **Time:** Provides functions for working with dates and times.
+- **Timedelta:** A class to represent time intervals.
+- **Hashlib:** Allows you to calculate message digests and hash codes.
+- **Global variables:** A size variable is defined that determines the size of the reading block. This can be adjusted depending on the capacity of the hard drive or USB stick.
+
+**Time Format Function:** strfdelta is a helper function that formats a timedelta object into a readable string.
+
+**Generate file hash function:** generate_file_hash calculates the MD5 hash of a given file. It uses the hashlib module to hash the file contents in hexadecimal format.
+
+**File Recovery Function:** recover_files is the main function that performs file recovery. It receives as input the path of the hard drive or USB memory (drive), the hexadecimal signature of the type of file to be searched (signature), the type of file (type), and the output directory for the recovered files (output_dir).
+
+Reads the hard drive or USB memory in blocks of size.
+Looks for the hexadecimal signature in each block read.
+When it finds the signature, it retrieves the associated file.
+Write the recovered file to the output directory.
+
+**List of file types and hexadecimal signatures:** main defines a list of file types along with their respective hexadecimal signatures. This list is used to iterate over each file type and recover them from the hard drive or USB stick.
+
+## Buffer Size
+
+The number of bytes to read depends on the capacity of the hard drive or USB memory. It also depends on the amount of RAM the operating system has.
+
+- Low range, it is recommended to read between 512 bytes and 2048 bytes.</br>
+- Medium range, it is recommended to read between 2048 bytes and 8192 bytes.</br>
+- High range, it is recommended to read between 8192 bytes and 65536 bytes or more.</br>
+
+In this case, the code sets the size variable to 16777216, which corresponds to a block size of 16 megabytes. This value can be adjusted based on specific application or system requirements.
+
+## Testing
+
+Tests carried out on an Acer Nitro 5 AN515-58 with the following specifications:
+
+- Processor: i5-12500H 3.10 GHz
+- Storage: M.2 Nvme 500GB
+- Graphics card: RTX3050
+- RAM memory: 32GB
+
+Good results were obtained using a block size of 16 megabytes.
+
+![pruebas](prueba.jpeg)
+
+## Hexadecimal Signatures
+
+Below is a list of supported file types along with their respective hexadecimal signatures. These signatures are used to identify file types during the recovery process. You can add or modify this list according to your needs:
+
+You can enable or disable additional file types by editing this list. Make sure the hexadecimal signatures are correct to avoid problems during the recovery process.
+
+**IMPORTANTE:** No repita tipos de archivos en la lista. Asegúrese de que las firmas hexadecimales sean correctas para evitar problemas durante el proceso de recuperación.
+
+Example:
+
+```
+tipos_archivo = [
+        ("JPEG", "FFD8FFE0"),  # File JPEG
+        ("PNG", "89504E470D0A1A0A"),  # File PNG
+        ("AI", "255044462D312E"),  # File Adobe Illustrator
+        ("EPS", "252150532D41646F6265"),  # File Encapsulated PostScript
+        ("INDD", "06054B50"),  # File Adobe InDesign
+        ("PSD", "38425053"),  # File Adobe Photoshop
+        ("PDF", "25504446"),  # File Adobe PDF
+        ("BMP", "424D"),  # File imagen BMP
+        ("TIFF", "49492A00"),  # File TIFF (Intel)
+        ("TIFF", "4D4D002A"),  # File TIFF (Motorola)
+        ("FLA", "464C5601"),  # File Adobe Flash FLA
+        ("SWF", "435753"),  # File Adobe Flash SWF
+        ("F4V", "464432"),  # File de video Adobe Flash F4V
+        ("GIF", "47494638"),  # File GIF
+        ("MP3", "FFF8"),  # File MP3
+        ("MP4", "66747970"),  # File MP4
+        ("JPEG2000", "0000000C6A502020"),  # File JPEG2000
+        ("AVI", "52494646"),  # File AVI
+        ("WAV", "52494646"),  # File WAV
+        ("FLAC", "664C6143"),  # File FLAC
+        # ("MOV", "6D6F6F76"),  # File QuickTime MOV
+        # ("WMV", "3026B275"),  # File Windows Media WMV
+        # ("EXE", "4D5A"),  # File EXE
+        # ("AIFF", "464F524D00"),  # File AIFF
+        # ("ZIP", "504B0304"),  # File ZIP
+        # ("RAR", "526172211A0700"),  # File RAR
+        # ("7Z", "377ABCAF271C"),  # File 7Z
+        # ("TAR", "7573746172"),  # File TAR
+        # ("GZ", "1F8B0800"),  # File GZ
+        # ("XZ", "FD377A585A00"),  # File XZ
+        # ("TAR.GZ", "1F8B080000000000"),  # File TAR.GZ
+        # ("TAR.XZ", "FD377A585A00"),  # File TAR.XZ
+        # ("TAR.BZ2", "425A68"),  # File TAR.BZ2
+        # ("DOCX", "504B0304"),  # File Microsoft Word DOCX
+        # ("XLSX", "504B0304"),  # File Microsoft Excel XLSX
+        # ("PPTX", "504B0304"),  # File Microsoft PowerPoint PPTX
+        # ("ODT", "504B0304"),  # File OpenDocument ODT
+        # ("ODS", "504B0304"),  # File OpenDocument ODS
+        # ("ODP", "504B0304"),  # File OpenDocument ODP
+    ]
+```
 
 <table>
 <thead><tr>
-<th data-sort-type="text" style="width:14em" class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"><a href="/wiki/Hexadecimal" title="Hexadecimal">Hex</a> signature
+<th>Hex</a> signature
 </th>
-<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending"><a href="/wiki/Filename_extension" title="Filename extension">Extension</a>
+<th>Extension
 </th>
-<th class="headerSort" tabindex="0" role="columnheader button" title="Sort ascending">Description
+<th>Description
 </th></tr></thead><tbody>
 <tr>
 <td data-sort-value="2@3@21"><code>23 21</code>
 </td>
 <td>
 </td>
-<td>Script or data to be passed to the program following the <a href="/wiki/Shebang_(Unix)" title="Shebang (Unix)">shebang</a> (#!)<sup id="cite_ref-1" class="reference"><a href="#cite_note-1">[1]</a></sup>
+<td>Script or data to be passed to the program following the shebang
 </td></tr>
 <tr>
 <td><code>02 00 5a 57 52 54 00 00 00 00 00 00 00 00 00 00</code>
@@ -58,7 +281,7 @@
 <td>Amiga Hunk executable file
 </td></tr>
 <tr>
-<td><code>00 00 49 49 58 50 52</code> (<a href="/wiki/Endianness#Little-endian" title="Endianness">little-endian</a>)<br><code>00 00 4D 4D 58 50 52</code> (<a href="/wiki/Endianness#Big-endian" title="Endianness">big-endian</a>)
+<td><code>00 00 49 49 58 50 52</code><br><code>00 00 4D 4D 58 50 52</code>
 </td>
 <td>qxd
 </td>
@@ -72,25 +295,25 @@
 <td>Password Gorilla Password Database
 </td></tr>
 <tr>
-<td><code>D4 C3 B2 A1</code> (<a href="/wiki/Endianness#Little-endian" title="Endianness">little-endian</a>)
+<td><code>D4 C3 B2 A1</code>
 </td>
-<td rowspan="2">pcap
+<td>pcap
 </td>
-<td rowspan="2">Libpcap File Format<sup id="cite_ref-Libpcap_File_Format_2-0" class="reference"><a href="#cite_note-Libpcap_File_Format-2">[2]</a></sup>
+<td>Libpcap File Format
 </td></tr>
 <tr>
-<td><code>A1 B2 C3 D4</code> (<a href="/wiki/Endianness#Big-endian" title="Endianness">big-endian</a>)
+<td><code>A1 B2 C3 D4</code>
 </td>
 </td></tr>
 <tr>
-<td><code>4D 3C B2 A1</code> (little-endian)
+<td><code>4D 3C B2 A1</code>
 </td>
-<td rowspan="2">pcap
+<td>pcap
 </td>
-<td rowspan="2">Libpcap File Format (nanosecond-resolution)<sup id="cite_ref-Libpcap_File_Format_2-1" class="reference"><a href="#cite_note-Libpcap_File_Format-2">[2]</a></sup>
+<td>Libpcap File Format (nanosecond-resolution)
 </td></tr>
 <tr>
-<td><code>A1 B2 3C 4D</code> (big-endian)
+<td><code>A1 B2 3C 4D</code>
 </td>
 </td></tr>
 <tr>
@@ -98,56 +321,56 @@
 </td>
 <td>pcapng
 </td>
-<td>PCAP Next Generation Dump File Format<sup id="cite_ref-3" class="reference"><a href="#cite_note-3">[3]</a></sup>
+<td>PCAP Next Generation Dump File Format
 </td></tr>
 <tr>
 <td><code>ED AB EE DB</code>
 </td>
 <td>rpm
 </td>
-<td>RedHat Package Manager (RPM) package<sup id="cite_ref-4" class="reference"><a href="#cite_note-4">[4]</a></sup>
+<td>RedHat Package Manager (RPM) package
 </td></tr>
 <tr>
-<td data-sort-value="5@3@5@1"><code>53 51 4C 69 74 65 20 66<br> 6F 72 6D 61 74 20 33 00</code>
+<td><code>53 51 4C 69 74 65 20 66<br> 6F 72 6D 61 74 20 33 00</code>
 </td>
 <td>sqlitedb<br>sqlite<br>db
 </td>
-<td>SQLite Database<sup id="cite_ref-5" class="reference"><a href="#cite_note-5">[5]</a></sup>
+<td>SQLite Database
 </td></tr>
 <tr>
-<td data-sort-value="5@3@5@0"><code>53 50 30 31</code>
+<td><code>53 50 30 31</code>
 </td>
 <td>bin
 </td>
-<td>Amazon Kindle Update Package<sup id="cite_ref-6" class="reference"><a href="#cite_note-6">[6]</a></sup>
+<td>Amazon Kindle Update Package
 </td></tr>
 <tr>
 <td><code>49 57 41 44</code>
 </td>
 <td>wad
 </td>
-<td>internal WAD (main resource file of <a href="/wiki/Doom_(franchise)" title="Doom (franchise)">Doom</a>)<sup id="cite_ref-IWAD_7-0" class="reference"><a href="#cite_note-IWAD-7">[7]</a></sup>
+<td>internal WAD (main resource file of Doom)
 </td></tr>
 <tr>
 <td><code>00</code>
 </td>
 <td>PIC<br>PIF<br>SEA<br>YTR
 </td>
-<td>IBM Storyboard bitmap file<br>Windows <a href="/wiki/Program_information_file" title="Program information file">Program Information File</a><br>Mac <a href="/wiki/StuffIt" title="StuffIt">Stuffit</a> Self-Extracting Archive<br>IRIS <a href="/wiki/Optical_character_recognition" title="Optical character recognition">OCR</a> data file
+<td>IBM Storyboard bitmap file<br>Windows Program Information File<br>Mac Stuffit Self-Extracting Archive<br>IRIS OCR data file
 </td></tr>
 <tr>
-<td data-sort-value="O11"><code>00 00 00 00 00 00 00 00<br> 00 00 00 00 00 00 00 00<br> 00 00 00 00 00 00 00 00</code>
+<td><code>00 00 00 00 00 00 00 00<br> 00 00 00 00 00 00 00 00<br> 00 00 00 00 00 00 00 00</code>
 </td>
 <td>PDB
 </td>
-<td><a href="/wiki/PalmPilot" title="PalmPilot">PalmPilot</a> Database/Document File
+<td>PalmPilot Database/Document File
 </td></tr>
 <tr>
 <td><code>BE BA FE CA</code>
 </td>
 <td>DBA
 </td>
-<td><a href="/wiki/Palm_(PDA)" title="Palm (PDA)">Palm</a> Desktop Calendar Archive
+<td>Palm Desktop Calendar Archive
 </td></tr>
 <tr>
 <td><code>00 01 42 44</code>
@@ -164,14 +387,14 @@
 <td>Palm Desktop Calendar Archive
 </td></tr>
 <tr>
-<td data-sort-value="5@4@4446"><code>54 44 46 24</code>
+<td><code>54 44 46 24</code>
 </td>
 <td>TDF$
 </td>
 <td>Telegram Desktop File
 </td></tr>
 <tr>
-<td data-sort-value="5@4@4445"><code>54 44 45 46</code>
+<td><code>54 44 45 46</code>
 </td>
 <td>TDEF
 </td>
@@ -182,31 +405,31 @@
 </td>
 <td>
 </td>
-<td>Palm Desktop Data File (<a href="/wiki/Microsoft_Access" title="Microsoft Access">Access</a> format)
+<td>Palm Desktop Data File (Access format)
 </td></tr>
 <tr>
 <td><code>00 00 01 00</code>
 </td>
 <td>ico
 </td>
-<td><a href="/wiki/Computer_icon" class="mw-redirect" title="Computer icon">Computer icon</a> encoded in <a href="/wiki/ICO_(file_format)" title="ICO (file format)">ICO file format</a><sup id="cite_ref-8" class="reference"><a href="#cite_note-8">[8]</a></sup>
+<td>Computer icon encoded in ICO file format
 </td></tr>
 <tr>
-<td data-sort-value="6@9@6@3"><code>69 63 6e 73</code>
+<td><code>69 63 6e 73</code>
 </td>
 <td>icns
 </td>
-<td><a href="/wiki/Apple_Icon_Image_format" title="Apple Icon Image format">Apple Icon Image format</a>
+<td>Apple Icon Image format
 </td></tr>
 <tr>
-<td data-sort-value="O4@667479703367"><code>66 74 79 70 33 67</code>
+<td><code>66 74 79 70 33 67</code>
 </td>
 <td>3gp<br>3g2
 </td>
-<td>3rd Generation Partnership Project <a href="/wiki/3GPP" title="3GPP">3GPP</a> and <a href="/wiki/3GPP2" class="mw-redirect" title="3GPP2">3GPP2</a> multimedia files
+<td>3rd Generation Partnership Project 3GPP and 3GPP2 multimedia files
 </td></tr>
 <tr>
-<td data-sort-value="O4@667479703367"><code>66 74 79 70 68 65 69 63</code><code>66 74 79 70 6d</code>
+<td><code>66 74 79 70 68 65 69 63</code><code>66 74 79 70 6d</code>
 </td>
 <td>heic
 </td>
@@ -217,395 +440,395 @@
 </td>
 <td>z<br>tar.z
 </td>
-<td>compressed file (often <a href="/wiki/Tar_(file_format)" class="mw-redirect" title="Tar (file format)">tar</a> zip) using <a href="/wiki/Lempel-Ziv-Welch" class="mw-redirect" title="Lempel-Ziv-Welch">Lempel-Ziv-Welch</a> algorithm
+<td>compressed file (often tar zip) using Lempel-Ziv-Welch algorithm
 </td></tr>
 <tr>
 <td><code>1F A0</code>
 </td>
 <td>z<br>tar.z
 </td>
-<td>Compressed file (often tar zip) using <a href="/wiki/LHA_(file_format)" title="LHA (file format)">LZH</a> algorithm
+<td>Compressed file (often tar zip) using LZH algorithm
 </td></tr>
 <tr>
-<td data-sort-value="2@D@6@8@6@C@3@0@2@D"><code>2D 68 6C 30 2D</code>
+<td><code>2D 68 6C 30 2D</code>
 </td>
 <td>lzh
 </td>
-<td><a href="/wiki/LHA_(file_format)" title="LHA (file format)">Lempel Ziv Huffman archive file</a> Method 0 (No compression)
+<td>Lempel Ziv Huffman archive file Method 0 (No compression)
 </td></tr>
 <tr>
-<td data-sort-value="2@D@6@8@6@C@3@5@2@D"><code>2D 68 6C 35 2D</code>
+<td><code>2D 68 6C 35 2D</code>
 </td>
 <td>lzh
 </td>
-<td><a href="/wiki/LHA_(file_format)" title="LHA (file format)">Lempel Ziv Huffman archive file</a> Method 5 (8KiB sliding window)
+<td>Lempel Ziv Huffman archive file Method 5 (8KiB sliding window)
 </td></tr>
 <tr>
-<td data-sort-value="4@2@4@1"><code>42 41 43 4B 4D 49 4B 45<br> 44 49 53 4B</code>
+<td><code>42 41 43 4B 4D 49 4B 45<br> 44 49 53 4B</code>
 </td>
 <td>bac
 </td>
-<td><a href="/w/index.php?title=AmiBack&amp;action=edit&amp;redlink=1" class="new" title="AmiBack (page does not exist)">AmiBack</a> <a href="/wiki/Amiga" title="Amiga">Amiga</a> <a href="/wiki/Backup" title="Backup">Backup</a> data file
+<td>AmiBack AmigaBackup data file
 </td></tr>
 <tr>
-<td data-sort-value="4@9@4E"><code>49 4E 44 58</code>
+<td><code>49 4E 44 58</code>
 </td>
 <td>idx
 </td>
-<td><a href="/w/index.php?title=AmiBack&amp;action=edit&amp;redlink=1" class="new" title="AmiBack (page does not exist)">AmiBack</a> <a href="/wiki/Amiga" title="Amiga">Amiga</a> <a href="/wiki/Backup" title="Backup">Backup</a> index file
+<td>AmiBack Amiga Backup index file
 </td></tr>
 <tr>
-<td data-sort-value="6@2@70"><code>62 70 6C 69 73 74</code>
+<td><code>62 70 6C 69 73 74</code>
 </td>
 <td>plist
 </td>
-<td>Binary <a href="/wiki/Property_List" class="mw-redirect" title="Property List">Property List</a> file
+<td>Binary Property List file
 </td></tr>
 <tr>
-<td data-sort-value="4@2@5A"><code>42 5A 68</code>
+<td><code>42 5A 68</code>
 </td>
 <td>bz2
 </td>
-<td>Compressed file using <a href="/wiki/Bzip2" title="Bzip2">Bzip2</a> algorithm
+<td>Compressed file using Bzip2 algorithm
 </td></tr>
 <tr>
-<td data-sort-value="4@7@49"><code>47 49 46 38 37 61</code><br><code>47 49 46 38 39 61</code>
+<td><code>47 49 46 38 37 61</code><br><code>47 49 46 38 39 61</code>
 </td>
 <td>gif
 </td>
-<td>Image file encoded in the <a href="/wiki/Graphics_Interchange_Format" class="mw-redirect" title="Graphics Interchange Format">Graphics Interchange Format</a> (GIF)<sup id="cite_ref-9" class="reference"><a href="#cite_note-9">[9]</a></sup>
+<td>Image file encoded in the Graphics Interchange Format (GIF)
 </td></tr>
 <tr>
-<td data-sort-value="4@9@4@9"><code>49 49 2A 00</code> (little-endian)
+<td><code>49 49 2A 00</code> (little-endian)
 </td>
-<td rowspan="2">tif<br>tiff
+<td>tif<br>tiff
 </td>
-<td rowspan="2"><a href="/wiki/Tagged_Image_File_Format" class="mw-redirect" title="Tagged Image File Format">Tagged Image File Format</a> (TIFF)<sup id="cite_ref-10" class="reference"><a href="#cite_note-10">[10]</a></sup>
+<td>Tagged Image File Format (TIFF)
 </td></tr>
 <tr>
 <td><code>4D 4D 00 2A</code> (big-endian)
 </td>
 </td></tr>
 <tr>
-<td data-sort-value="4@9@4@9B"><code>49 49 2A 00 10 00 00 00<br> 43 52</code>
+<td><code>49 49 2A 00 10 00 00 00<br> 43 52</code>
 </td>
 <td>cr2
 </td>
-<td>Canon RAW Format Version 2<sup id="cite_ref-11" class="reference"><a href="#cite_note-11">[11]</a></sup><br>Canon's RAW format is based on TIFF.<sup id="cite_ref-12" class="reference"><a href="#cite_note-12">[12]</a></sup>
+<td>Canon RAW Format Version 2<br>Canon's RAW format is based on TIFF.
 </td></tr>
 <tr>
-<td data-sort-value="8@0"><code>80 2A 5F D7</code>
+<td><code>80 2A 5F D7</code>
 </td>
 <td>cin
 </td>
-<td><a href="/wiki/Eastman_Kodak" class="mw-redirect" title="Eastman Kodak">Kodak</a> <a href="/wiki/Cineon#Cineon_file_format" title="Cineon">Cineon image</a>
+<td>Kodak Cineon image</a>
 </td></tr>
 <tr>
-<td data-sort-value="5@2@4E"><code>52 4E 43 01</code><br><code>52 4E 43 02</code>
+<td><code>52 4E 43 01</code><br><code>52 4E 43 02</code>
 </td>
 <td>
 </td>
-<td>Compressed file using Rob Northen Compression (version 1 and 2) algorithm<sup id="cite_ref-13" class="reference"><a href="#cite_note-13">[13]</a></sup>
+<td>Compressed file using Rob Northen Compression (version 1 and 2) algorithm
 </td></tr>
 <tr>
 <td><code>4E 55 52 55 49 4D 47</code><br><code>4E 55 52 55 50 41 4C</code>
 </td>
 <td>nui<br>nup
 </td>
-<td>nuru ASCII/ANSI image and palette files<sup id="cite_ref-14" class="reference"><a href="#cite_note-14">[14]</a></sup>
+<td>nuru ASCII/ANSI image and palette files
 </td></tr>
 <tr>
-<td data-sort-value="5@3@4@4"><code>53 44 50 58</code> (<a href="/wiki/Endianness#Big-endian" title="Endianness">big-endian</a> format)
+<td><code>53 44 50 58</code> (big-endian format)
 </td>
-<td rowspan="2">dpx
+<td>dpx
 </td>
-<td rowspan="2"><a href="/wiki/SMPTE" class="mw-redirect" title="SMPTE">SMPTE</a> <a href="/wiki/Digital_Picture_Exchange" title="Digital Picture Exchange">DPX image</a>
+<td>SMPTE DPX image
 </td></tr>
 <tr>
-<td data-sort-value="5@850"><code>58 50 44 53</code> (<a href="/wiki/Endianness#Little-endian" title="Endianness">little-endian</a> format)
+<td><code>58 50 44 53</code> (little-endian format)
 </td>
 </td></tr>
 <tr>
-<td data-sort-value="7@6@2"><code>76 2F 31 01</code>
+<td><code>76 2F 31 01</code>
 </td>
 <td>exr
 </td>
-<td><a href="/wiki/OpenEXR" title="OpenEXR">OpenEXR image</a>
+<td>OpenEXR image
 </td></tr>
 <tr>
-<td data-sort-value="4@2@5@0"><code>42 50 47 FB</code>
+<td><code>42 50 47 FB</code>
 </td>
 <td>bpg
 </td>
-<td><a href="/wiki/Better_Portable_Graphics" title="Better Portable Graphics">Better Portable Graphics</a> format<sup id="cite_ref-15" class="reference"><a href="#cite_note-15">[15]</a></sup>
+<td>Better Portable Graphics format
 </td></tr>
 <tr>
-<td data-sort-value="F@F@D@8"><code>FF D8 FF DB</code>
+<td><code>FF D8 FF DB</code>
 </td>
-<td rowspan="4">jpg<br>jpeg
+<td>jpg<br>jpeg
 </td>
-<td rowspan="4"><a href="/wiki/JPEG" title="JPEG">JPEG</a> raw or in the <a href="/wiki/JFIF" class="mw-redirect" title="JFIF">JFIF</a> or <a href="/wiki/Exif" title="Exif">Exif</a> file format<sup id="cite_ref-:0_16-0" class="reference"><a href="#cite_note-:0-16">[16]</a></sup>
+<td>JPEG raw or in the JFIF or Exif file format
 </td></tr>
 <tr>
-<td data-sort-value="F@F@D@8"><code>FF D8 FF E0 00 10 4A 46<br> 49 46 00 01</code>
-</td>
-</td></tr>
-<tr>
-<td data-sort-value="F@F@D@8"><code>FF D8 FF EE</code>
+<td><code>FF D8 FF E0 00 10 4A 46<br> 49 46 00 01</code>
 </td>
 </td></tr>
 <tr>
-<td data-sort-value="F@F@D@8"><code>FF D8 FF E1&nbsp;??&nbsp;?? 45 78<br> 69 66 00 00</code>
+<td><code>FF D8 FF EE</code>
+</td>
+</td></tr>
+<tr>
+<td><code>FF D8 FF E1&nbsp;??&nbsp;?? 45 78<br> 69 66 00 00</code>
 </td>
 </tr>
 <tr>
-<td data-sort-value="F@F@D@8"><code>FF D8 FF E0</code>
+<td><code>FF D8 FF E0</code>
 </td>
 <td>jpg
 </td>
-<td><a href="/wiki/JPEG" title="JPEG">JPEG</a> raw or in the <a href="/wiki/JFIF" class="mw-redirect" title="JFIF">JFIF</a> or <a href="/wiki/Exif" title="Exif">Exif</a> file format<sup id="cite_ref-:0_16-1" class="reference"><a href="#cite_note-:0-16">[16]</a></sup>
+<td>JPEG raw or in the JFIF or Exif file format
 </td></tr>
 <tr>
-<td data-sort-value="0@0@0@0"><code class="mw-highlight mw-highlight-lang-text mw-content-ltr" id="" style="" dir="ltr">00 00 00 0C 6A 50 20 20 0D 0A 87 0A</code>
+<td><code>00 00 00 0C 6A 50 20 20 0D 0A 87 0A</code>
 </td>
-<td rowspan="2">jp2<br>j2k<br>jpf<br>jpm<br>jpg2<br>j2c<br>jpc<br>jpx<br>mj2
+<td>jp2<br>j2k<br>jpf<br>jpm<br>jpg2<br>j2c<br>jpc<br>jpx<br>mj2
 </td>
-<td rowspan="2"><a href="/wiki/JPEG_2000" title="JPEG 2000">JPEG 2000</a> format<sup id="cite_ref-17" class="reference"><a href="#cite_note-17">[17]</a></sup>
+<td>JPEG 2000 format
 </td></tr>
 <tr>
-<td data-sort-value="0@0@0@0"><code class="mw-highlight mw-highlight-lang-text mw-content-ltr" id="" style="" dir="ltr">FF 4F FF 51</code>
+<td><code>FF 4F FF 51</code>
 </td>
 </td></tr>
 <tr>
-<td data-sort-value="71@6f@69@66"><code>71 6f 69 66</code>
+<td><code>71 6f 69 66</code>
 </td>
 <td>qoi
 </td>
-<td><a href="/wiki/QOI_(image_format)" title="QOI (image format)">QOI</a> - The “Quite OK Image Format”<sup id="cite_ref-18" class="reference"><a href="#cite_note-18">[18]</a></sup>
+<td>QOI - The “Quite OK Image Format”
 </td></tr>
 <tr>
-<td data-sort-value="4@6@4F49"><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 49 4C 42 4D</code>
+<td><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 49 4C 42 4D</code>
 </td>
 <td>ilbm<br>lbm<br>ibm<br>iff
 </td>
-<td><a href="/wiki/Interchange_File_Format" title="Interchange File Format">IFF</a> <a href="/wiki/ILBM" title="ILBM">Interleaved Bitmap Image</a>
+<td>IFF Interleaved Bitmap Image
 </td></tr>
 <tr>
-<td data-sort-value="4@6@4F38"><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 38 53 56 58</code>
+<td><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 38 53 56 58</code>
 </td>
 <td>8svx<br>8sv<br>svx<br>snd<br>iff
 </td>
-<td><a href="/wiki/Interchange_File_Format" title="Interchange File Format">IFF</a> <a href="/wiki/8SVX" title="8SVX">8-Bit Sampled Voice</a>
+<td>IFF 8-Bit Sampled Voice
 </td></tr>
 <tr>
-<td data-sort-value="4@6@4F41@4@3"><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 41 43 42 4D</code>
+<td><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 41 43 42 4D</code>
 </td>
 <td>acbm<br>iff
 </td>
-<td><a href="/w/index.php?title=Amiga_Contiguous_Bitmap&amp;action=edit&amp;redlink=1" class="new" title="Amiga Contiguous Bitmap (page does not exist)">Amiga Contiguous Bitmap</a>
+<td>Amiga Contiguous Bitmap
 </td></tr>
 <tr>
-<td data-sort-value="4@6@4F41@4E42"><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 41 4E 42 4D</code>
+<td><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 41 4E 42 4D</code>
 </td>
 <td>anbm<br>iff
 </td>
-<td><a href="/wiki/Interchange_File_Format" title="Interchange File Format">IFF</a> <a href="/w/index.php?title=IFF_Animated_Bitmap&amp;action=edit&amp;redlink=1" class="new" title="IFF Animated Bitmap (page does not exist)">Animated Bitmap</a>
+<td>IFF Animated Bitmap
 </td></tr>
 <tr>
-<td data-sort-value="4@6@4F41@4E49"><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 41 4E 49 4D</code>
+<td><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 41 4E 49 4D</code>
 </td>
 <td>anim<br>iff
 </td>
-<td><a href="/wiki/Interchange_File_Format" title="Interchange File Format">IFF</a> <a href="/w/index.php?title=IFF_CEL_Animation&amp;action=edit&amp;redlink=1" class="new" title="IFF CEL Animation (page does not exist)">CEL Animation</a>
+<td>IFF CEL Animation
 </td></tr>
 <tr>
-<td data-sort-value="4@6@4F46@415"><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 46 41 58 58</code>
+<td><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 46 41 58 58</code>
 </td>
 <td>faxx<br>fax<br>iff
 </td>
-<td><a href="/wiki/Interchange_File_Format" title="Interchange File Format">IFF</a> <a href="/wiki/Fax" title="Fax">Facsimile Image</a>
+<td>IFF Facsimile Image
 </td></tr>
 <tr>
-<td data-sort-value="4@6@4F46@545"><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 46 54 58 54</code>
+<td><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 46 54 58 54</code>
 </td>
 <td>ftxt<br>iff
 </td>
-<td><a href="/wiki/Interchange_File_Format" title="Interchange File Format">IFF</a> <a href="/wiki/Formatted_text" title="Formatted text">Formatted Text</a>
+<td>IFF Formatted Text
 </td></tr>
 <tr>
-<td data-sort-value="4@6@4F53"><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 53 4D 55 53</code>
+<td><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 53 4D 55 53</code>
 </td>
 <td>smus<br>smu<br>mus<br>iff
 </td>
-<td><a href="/wiki/Interchange_File_Format" title="Interchange File Format">IFF</a> <a href="/w/index.php?title=IFF_Simple_Musical_Score&amp;action=edit&amp;redlink=1" class="new" title="IFF Simple Musical Score (page does not exist)">Simple Musical Score</a>
+<td>IFF Simple Musical Score
 </td></tr>
 <tr>
-<td data-sort-value="4@6@4F43"><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 43 4D 55 53</code>
+<td><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 43 4D 55 53</code>
 </td>
 <td>cmus<br>mus<br>iff
 </td>
-<td><a href="/wiki/Interchange_File_Format" title="Interchange File Format">IFF</a> <a href="/w/index.php?title=IFF_Musical_Score&amp;action=edit&amp;redlink=1" class="new" title="IFF Musical Score (page does not exist)">Musical Score</a>
+<td>IFF Musical Score
 </td></tr>
 <tr>
-<td data-sort-value="4@6@4F59"><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 59 55 56 4E</code>
+<td><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 59 55 56 4E</code>
 </td>
 <td>yuvn<br>yuv<br>iff
 </td>
-<td><a href="/wiki/Interchange_File_Format" title="Interchange File Format">IFF</a> <a href="/wiki/YUV" class="mw-redirect" title="YUV">YUV Image</a>
+<td>IFF YUV Image
 </td></tr>
 <tr>
-<td data-sort-value="4@6@4F46@414"><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 46 41 4E 54</code>
+<td><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 46 41 4E 54</code>
 </td>
 <td>iff
 </td>
-<td><a href="/wiki/Amiga" title="Amiga">Amiga</a> <a href="/wiki/Fantavision" title="Fantavision">Fantavision Movie</a>
+<td>Fantavision Movie
 </td></tr>
 <tr>
-<td data-sort-value="4@6@4F41@4@9"><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 41 49 46 46</code>
+<td><code>46 4F 52 4D&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 41 49 46 46</code>
 </td>
 <td>aiff<br>aif<br>aifc<br>snd<br>iff
 </td>
-<td><a href="/wiki/Audio_Interchange_File_Format" title="Audio Interchange File Format">Audio Interchange File Format</a>
+<td>Audio Interchange File Format
 </td></tr>
 <tr>
 <td><code>4C 5A 49 50</code>
 </td>
 <td>lz
 </td>
-<td><a href="/wiki/Lzip" title="Lzip">lzip</a> compressed file<sup id="cite_ref-19" class="reference"><a href="#cite_note-19">[19]</a></sup>
+<td>lzip compressed file
 </td></tr>
 <tr>
 <td><code>30 37 30 37 30 37</code>
 </td>
 <td>cpio
 </td>
-<td><a href="/wiki/Cpio" title="Cpio">cpio</a> archive file<sup id="cite_ref-Cpio_file_format_20-0" class="reference"><a href="#cite_note-Cpio_file_format-20">[20]</a></sup>
+<td>cpio archive file
 </td></tr>
 <tr>
 <td><code>4D 5A</code>
 </td>
 <td>exe<br>dll<br>mui<br>sys<br>scr<br>cpl<br>ocx<br>ax<br>iec<br>ime<br>rs<br>tsp<br>fon<br>efi
 </td>
-<td><a href="/wiki/DOS_MZ_executable" title="DOS MZ executable">DOS MZ executable</a> and its descendants (including <a href="/wiki/New_Executable" title="New Executable">NE</a> and <a href="/wiki/Portable_Executable" title="Portable Executable">PE</a>)
+<td>DOS MZ executable and its descendants (including NE and PE)
 </td></tr>
 <tr>
 <td><code>5A 4D</code>
 </td>
 <td>exe
 </td>
-<td><a href="/wiki/DOS_ZM_executable" class="mw-redirect" title="DOS ZM executable">DOS ZM executable</a> and its descendants (rare)
+<td>DOS ZM executable and its descendants (rare)
 </td></tr>
 <tr>
-<td data-sort-value="5@0@4B"><code>50 4B 03 04</code><br><code>50 4B 05 06</code> (empty archive)<br><code>50 4B 07 08</code> (spanned archive)
+<td><code>50 4B 03 04</code><br><code>50 4B 05 06</code> (empty archive)<br><code>50 4B 07 08</code> (spanned archive)
 </td>
-<td>zip<br>aar<br>apk<br>docx<br>epub<br><a href="/wiki/.ipa" title=".ipa">ipa</a><br>jar<br>kmz<br><a href="/wiki/Mozilla_Archive_Format" title="Mozilla Archive Format">maff</a><br>msix<br>odp<br>ods<br>odt<br>pk3<br>pk4<br>pptx<br>usdz<br>vsdx<br>xlsx<br><a href="/wiki/XPInstall" title="XPInstall">xpi</a>
+<td>zip<br>aar<br>apk<br>docx<br>epub<br>ipa<br>jar<br>kmz<br>maff<br>msix<br>odp<br>ods<br>odt<br>pk3<br>pk4<br>pptx<br>usdz<br>vsdx<br>xlsx<br>xpi
 </td>
-<td><a href="/wiki/ZIP_(file_format)" title="ZIP (file format)">zip file format</a> and formats based on it, such as <a href="/wiki/EPUB" title="EPUB">EPUB</a>, <a href="/wiki/JAR_(file_format)" title="JAR (file format)">JAR</a>, <a href="/wiki/OpenDocument" title="OpenDocument">ODF</a>, <a href="/wiki/Office_Open_XML" title="Office Open XML">OOXML</a>
+<td>zip file format and formats based on it, such as EPUB JAR ODF OOXML
 </td></tr>
 <tr>
-<td data-sort-value="5@2@61"><code>52 61 72 21 1A 07 00</code>
+<td><code>52 61 72 21 1A 07 00</code>
 </td>
 <td>rar
 </td>
-<td><a href="/wiki/RAR_(file_format)" title="RAR (file format)">Roshal ARchive</a> compressed archive v1.50 onwards<sup id="cite_ref-21" class="reference"><a href="#cite_note-21">[21]</a></sup>
+<td>Roshal ARchive compressed archive v1.50 onwards
 </td></tr>
 <tr>
 <td data-sort-value="5@2@61B"><code>52 61 72 21 1A 07 01 00</code>
 </td>
 <td>rar
 </td>
-<td><a href="/wiki/RAR_(file_format)" title="RAR (file format)">Roshal ARchive</a> compressed archive v5.00 onwards<sup id="cite_ref-22" class="reference"><a href="#cite_note-22">[22]</a></sup>
+<td>Roshal ARchive compressed archive v5.00 onwards
 </td></tr>
 <tr>
 <td><code>7F 45 4C 46</code>
 </td>
 <td>
 </td>
-<td><a href="/wiki/Executable_and_Linkable_Format" title="Executable and Linkable Format">Executable and Linkable Format</a>
+<td>Executable and Linkable Format
 </td></tr>
 <tr>
-<td data-sort-value="8@9"><code>89 50 4E 47 0D 0A 1A 0A</code>
+<td><code>89 50 4E 47 0D 0A 1A 0A</code>
 </td>
 <td>png
 </td>
-<td>Image encoded in the <a href="/wiki/Portable_Network_Graphics" class="mw-redirect" title="Portable Network Graphics">Portable Network Graphics</a> format<sup id="cite_ref-23" class="reference"><a href="#cite_note-23">[23]</a></sup>
+<td>Image encoded in the Portable Network Graphics format
 </td></tr>
 <tr>
 <td><code>C9</code>
 </td>
 <td>com
 </td>
-<td><a href="/wiki/COM_file_(CP/M)" class="mw-redirect" title="COM file (CP/M)">CP/M 3</a> and higher with overlays<sup id="cite_ref-Elliott_CPM3_COM_24-0" class="reference"><a href="#cite_note-Elliott_CPM3_COM-24">[24]</a></sup>
+<td>CP/M 3 and higher with overlays
 </td></tr>
 <tr>
 <td><code>CA FE BA BE</code>
 </td>
 <td>class
 </td>
-<td><a href="/wiki/Java_class_file" title="Java class file">Java class file</a>, <a href="/wiki/Fat_binary#Apple" title="Fat binary">Mach-O Fat Binary</a>
+<td>Java class file, Mach-O Fat Binary
 </td></tr>
 <tr>
 <td><code>EF BB BF</code>
 </td>
 <td>txt<br><i>others</i>
 </td>
-<td><a href="/wiki/UTF-8" title="UTF-8">UTF-8</a> <a href="/wiki/Byte_order_mark" title="Byte order mark">byte order mark</a>, commonly seen in text files.<sup id="cite_ref-BOM_25-0" class="reference"><a href="#cite_note-BOM-25">[25]</a></sup><sup id="cite_ref-XML_26-0" class="reference"><a href="#cite_note-XML-26">[26]</a></sup><sup id="cite_ref-SDL_27-0" class="reference"><a href="#cite_note-SDL-27">[27]</a></sup>
+<td>byte order mark, commonly seen in text files.
 </td></tr>
 <tr>
 <td><code>FF FE</code>
 </td>
 <td>txt<br><i>others</i>
 </td>
-<td><a href="/wiki/UTF-16LE" class="mw-redirect" title="UTF-16LE">UTF-16LE</a> byte order mark, commonly seen in text files.<sup id="cite_ref-BOM_25-1" class="reference"><a href="#cite_note-BOM-25">[25]</a></sup><sup id="cite_ref-XML_26-1" class="reference"><a href="#cite_note-XML-26">[26]</a></sup><sup id="cite_ref-SDL_27-1" class="reference"><a href="#cite_note-SDL-27">[27]</a></sup>
+<td>UTF-16LE byte order mark, commonly seen in text files.
 </td></tr>
 <tr>
 <td><code>FE FF</code>
 </td>
 <td>txt<br><i>others</i>
 </td>
-<td><a href="/wiki/UTF-16BE" class="mw-redirect" title="UTF-16BE">UTF-16BE</a> byte order mark, commonly seen in text files.<sup id="cite_ref-BOM_25-2" class="reference"><a href="#cite_note-BOM-25">[25]</a></sup><sup id="cite_ref-XML_26-2" class="reference"><a href="#cite_note-XML-26">[26]</a></sup><sup id="cite_ref-SDL_27-2" class="reference"><a href="#cite_note-SDL-27">[27]</a></sup>
+<td>UTF-16BE byte order mark, commonly seen in text files.
 </td></tr>
 <tr>
 <td><code>FF FE 00 00</code>
 </td>
 <td>txt<br><i>others</i>
 </td>
-<td><a href="/wiki/UTF-32LE" class="mw-redirect" title="UTF-32LE">UTF-32LE</a> byte order mark for text<sup id="cite_ref-BOM_25-3" class="reference"><a href="#cite_note-BOM-25">[25]</a></sup><sup id="cite_ref-SDL_27-3" class="reference"><a href="#cite_note-SDL-27">[27]</a></sup>
+<td>UTF-32LE byte order mark for text
 </td></tr>
 <tr>
 <td><code>00 00 FE FF</code>
 </td>
 <td>txt<br><i>others</i>
 </td>
-<td><a href="/wiki/UTF-32BE" class="mw-redirect" title="UTF-32BE">UTF-32BE</a> byte order mark for text<sup id="cite_ref-BOM_25-4" class="reference"><a href="#cite_note-BOM-25">[25]</a></sup><sup id="cite_ref-SDL_27-4" class="reference"><a href="#cite_note-SDL-27">[27]</a></sup>
+<td>UTF-32BE byte order mark for text
 </td></tr>
 <tr>
 <td><code>2B 2F 76 38</code><br><code>2B 2F 76 39</code><br><code>2B 2F 76 2B</code><br><code>2B 2F 76 2F</code>
 </td>
 <td>
 </td>
-<td><a href="/wiki/UTF-7" title="UTF-7">UTF-7</a> byte order mark for text<sup id="cite_ref-BG_28-0" class="reference"><a href="#cite_note-BG-28">[28]</a></sup><sup id="cite_ref-SDL_27-5" class="reference"><a href="#cite_note-SDL-27">[27]</a></sup>
+<td>UTF-7 byte order mark for text
 </td></tr>
 <tr>
 <td><code>0E FE FF</code>
 </td>
 <td>txt<br><i>others</i>
 </td>
-<td><a href="/wiki/Standard_Compression_Scheme_for_Unicode" title="Standard Compression Scheme for Unicode">SCSU</a> byte order mark for text<sup id="cite_ref-BG_28-1" class="reference"><a href="#cite_note-BG-28">[28]</a></sup><sup id="cite_ref-SDL_27-6" class="reference"><a href="#cite_note-SDL-27">[27]</a></sup>
+<td>SCSU byte order mark for text
 </td></tr>
 <tr>
 <td><code>DD 73 66 73</code>
 </td>
 <td>
 </td>
-<td><a href="/wiki/UTF-EBCDIC" title="UTF-EBCDIC">UTF-EBCDIC</a> byte order mark for text<sup id="cite_ref-BG_28-2" class="reference"><a href="#cite_note-BG-28">[28]</a></sup><sup id="cite_ref-SDL_27-7" class="reference"><a href="#cite_note-SDL-27">[27]</a></sup>
+<td>UTF-EBCDIC byte order mark for text
 </td></tr>
 <tr>
 <td><code>FE ED FA CE</code>
 </td>
 <td>
 </td>
-<td><a href="/wiki/Mach-O" title="Mach-O">Mach-O</a> binary (32-bit)
+<td>Mach-O binary (32-bit)
 </td></tr>
 <tr>
 <td><code>FE ED FA CF</code>
@@ -619,231 +842,231 @@
 </td>
 <td>
 </td>
-<td>JKS Javakey Store<sup id="cite_ref-29" class="reference"><a href="#cite_note-29">[29]</a></sup>
+<td>JKS Javakey Store
 </td></tr>
 <tr>
 <td><code>CE FA ED FE</code>
 </td>
 <td>
 </td>
-<td>Mach-O binary (reverse byte ordering scheme, 32-bit)<sup id="cite_ref-apple.com_30-0" class="reference"><a href="#cite_note-apple.com-30">[30]</a></sup>
+<td>Mach-O binary (reverse byte ordering scheme, 32-bit)
 </td></tr>
 <tr>
 <td><code>CF FA ED FE</code>
 </td>
 <td>
 </td>
-<td>Mach-O binary (reverse byte ordering scheme, 64-bit)<sup id="cite_ref-apple.com_30-1" class="reference"><a href="#cite_note-apple.com-30">[30]</a></sup>
+<td>Mach-O binary (reverse byte ordering scheme, 64-bit)
 </td></tr>
 <tr>
-<td data-sort-value="2@5@2"><code>25 21 50 53</code>
+<td><code>25 21 50 53</code>
 </td>
 <td>ps
 </td>
-<td><a href="/wiki/PostScript" title="PostScript">PostScript document</a>
+<td>PostScript document
 </td></tr>
 <tr>
-<td data-sort-value="2@5@2@1@5@0@5@3@2@d@4@1"><code>25 21 50 53 2D 41 64 6F 62 65 2D 33 2E 30 20 45 50 53 46 2D 33 2E 30</code>
+<td><code>25 21 50 53 2D 41 64 6F 62 65 2D 33 2E 30 20 45 50 53 46 2D 33 2E 30</code>
 </td>
 <td>eps<br>epsf
 </td>
-<td><a href="/wiki/Encapsulated_PostScript" title="Encapsulated PostScript">Encapsulated PostScript</a> file version 3.0<sup id="cite_ref-Encapsulated_PostScript_(EPS)_File_Format,_Version_3.0_31-0" class="reference"><a href="#cite_note-Encapsulated_PostScript_(EPS)_File_Format,_Version_3.0-31">[31]</a></sup>
+<td>Encapsulated PostScript file version 3.0
 </td></tr>
 <tr>
-<td data-sort-value="2@5@2@1@5@0@5@3@2@d@4@1"><code>25 21 50 53 2D 41 64 6F 62 65 2D 33 2E 31 20 45 50 53 46 2D 33 2E 30</code>
+<td><code>25 21 50 53 2D 41 64 6F 62 65 2D 33 2E 31 20 45 50 53 46 2D 33 2E 30</code>
 </td>
 <td>eps<br>epsf
 </td>
-<td><a href="/wiki/Encapsulated_PostScript" title="Encapsulated PostScript">Encapsulated PostScript</a> file version 3.1<sup id="cite_ref-Encapsulated_PostScript_(EPS)_File_Format,_Version_3.1_32-0" class="reference"><a href="#cite_note-Encapsulated_PostScript_(EPS)_File_Format,_Version_3.1-32">[32]</a></sup>
+<td>Encapsulated PostScript file version 3.1
 </td></tr>
 <tr>
-<td data-sort-value="4@9@5@4"><code>49 54 53 46 03 00 00 00<br> 60 00 00 00</code>
+<td><code>49 54 53 46 03 00 00 00<br> 60 00 00 00</code>
 </td>
 <td>chm
 </td>
-<td><a href="/wiki/Microsoft_Compiled_HTML_Help" title="Microsoft Compiled HTML Help">MS Windows HtmlHelp Data</a>
+<td>MS Windows HtmlHelp Data
 </td></tr>
 <tr>
-<td data-sort-value="3@F@5@F"><code>3F 5F</code>
+<td><code>3F 5F</code>
 </td>
 <td>hlp
 </td>
 <td>Windows 3.x/95/98 Help file
 </td></tr>
 <tr>
-<td data-sort-value="2@5@5"><code>25 50 44 46 2D</code>
+<td><code>25 50 44 46 2D</code>
 </td>
 <td>pdf
 </td>
-<td><a href="/wiki/Portable_Document_Format" class="mw-redirect" title="Portable Document Format">PDF document</a><sup id="cite_ref-33" class="reference"><a href="#cite_note-33">[33]</a></sup>
+<td>PDF document
 </td></tr>
 <tr>
-<td data-sort-value="3@0@2"><code>30 26 B2 75 8E 66 CF 11<br> A6 D9 00 AA 00 62 CE 6C</code>
+<td><code>30 26 B2 75 8E 66 CF 11<br> A6 D9 00 AA 00 62 CE 6C</code>
 </td>
 <td>asf<br>wma<br>wmv
 </td>
-<td><a href="/wiki/Advanced_Systems_Format" title="Advanced Systems Format">Advanced Systems Format</a><sup id="cite_ref-34" class="reference"><a href="#cite_note-34">[34]</a></sup>
+<td>Advanced Systems Format
 </td></tr>
 <tr>
-<td data-sort-value="2@4"><code>24 53 44 49 30 30 30 31</code>
+<td><code>24 53 44 49 30 30 30 31</code>
 </td>
 <td>
 </td>
-<td><a href="/wiki/System_Deployment_Image" title="System Deployment Image">System Deployment Image</a>, a disk image format used by <a href="/wiki/Microsoft" title="Microsoft">Microsoft</a>
+<td>System Deployment Image, a disk image format used by Microsoft
 </td></tr>
 <tr>
 <td><code>4F 67 67 53</code>
 </td>
 <td>ogg<br>oga<br>ogv
 </td>
-<td><a href="/wiki/Ogg" title="Ogg">Ogg</a>, an <a href="/wiki/Open-source_license" title="Open-source license">open source</a> media container format
+<td>Ogg, an open source media container format
 </td></tr>
 <tr>
-<td data-sort-value="3@8"><code>38 42 50 53</code>
+<td><code>38 42 50 53</code>
 </td>
 <td>psd
 </td>
-<td>Photoshop Document file, <a href="/wiki/Adobe_Photoshop" title="Adobe Photoshop">Adobe Photoshop</a>'s native file format
+<td>Photoshop Document file, Adobe Photoshop's native file format
 </td></tr>
 <tr>
-<td data-sort-value="5@2@4@9574@1"><code>52 49 46 46&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 57 41 56 45</code>
+<td><code>52 49 46 46&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 57 41 56 45</code>
 </td>
 <td>wav
 </td>
-<td><a href="/wiki/Waveform_Audio_File_Format" class="mw-redirect" title="Waveform Audio File Format">Waveform Audio File Format</a><sup id="cite_ref-35" class="reference"><a href="#cite_note-35">[35]</a></sup>
+<td>Waveform Audio File Format
 </td></tr>
 <tr>
-<td data-sort-value="5@2@4@9415"><code>52 49 46 46&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 41 56 49 20</code>
+<td><code>52 49 46 46&nbsp;??&nbsp;??&nbsp;??&nbsp;??<br> 41 56 49 20</code>
 </td>
 <td>avi
 </td>
-<td><a href="/wiki/Audio_Video_Interleave" title="Audio Video Interleave">Audio Video Interleave</a> video format<sup id="cite_ref-36" class="reference"><a href="#cite_note-36">[36]</a></sup>
+<td>Audio Video Interleave video format
 </td></tr>
 <tr>
 <td><code>FF FB</code><br><code>FF F3</code><br><code>FF F2</code>
 </td>
 <td>mp3
 </td>
-<td><a href="/wiki/MPEG-1_Layer_3" class="mw-redirect" title="MPEG-1 Layer 3">MPEG-1 Layer 3</a> file without an <a href="/wiki/ID3" title="ID3">ID3</a> tag or with an <a href="/wiki/ID3" title="ID3">ID3v</a>1 tag (which is appended at the end of the file)
+<td>MPEG-1 Layer 3 file without an ID3 tag or with an ID3v1 tag (which is appended at the end of the file)
 </td></tr>
 <tr>
-<td data-sort-value="4@9@4@4"><code>49 44 33</code>
+<td><code>49 44 33</code>
 </td>
 <td>mp3
 </td>
-<td><a href="/wiki/MP3" title="MP3">MP3</a> file with an ID3v2 container
+<td>MP3 file with an ID3v2 container
 </td></tr>
 <tr>
-<td data-sort-value="4@2@4D"><code>42 4D</code>
+<td><code>42 4D</code>
 </td>
 <td>bmp<br>dib
 </td>
-<td><a href="/wiki/BMP_file_format" title="BMP file format">BMP</a> file, a <a href="/wiki/Bitmap" title="Bitmap">bitmap</a> format used mostly in the <a href="/wiki/Windows" class="mw-redirect" title="Windows">Windows</a> world
+<td>BMP file, a bitmap format used mostly in the Windows world
 </td></tr>
 <tr>
-<td data-sort-value="O32769"><code>43 44 30 30 31</code>
+<td><code>43 44 30 30 31</code>
 </td>
 <td>iso
 </td>
-<td><a href="/wiki/ISO9660" class="mw-redirect" title="ISO9660">ISO9660</a> CD/DVD image file<sup id="cite_ref-37" class="reference"><a href="#cite_note-37">[37]</a></sup>
+<td>ISO9660 CD/DVD image file
 </td></tr>
 <tr>
-<td data-sort-value="O32769"><code>43 44 30 30 31</code>
+<td><code>43 44 30 30 31</code>
 </td>
 <td>cdi
 </td>
 <td>CD-i CD image file
 </td></tr>
 <tr>
-<td data-sort-value="6@d@6@1@6@9"><code>6D 61 69 6E 2E 62 73</code>
+<td><code>6D 61 69 6E 2E 62 73</code>
 </td>
 <td>mgw
 </td>
-<td>Nintendo <a href="/wiki/Game_%26_Watch" title="Game &amp; Watch">Game &amp; Watch</a> image file
+<td>Nintendo Game &amp; Watch image file
 </td></tr>
 <tr>
-<td data-sort-value="4@e@4@5@5@3"><code>4E 45 53</code>
+<td><code>4E 45 53</code>
 </td>
 <td>nes
 </td>
-<td><a href="/wiki/Nintendo_Entertainment_System" title="Nintendo Entertainment System">Nintendo Entertainment System</a> image file
+<td>Nintendo Entertainment System image file
 </td></tr>
 <tr>
-<td data-sort-value="a@0@3@2@4@1"><code>A0 32 41 A0 A0 A0</code>
+<td><code>A0 32 41 A0 A0 A0</code>
 </td>
 <td>d64
 </td>
-<td><a href="/wiki/Commodore_64" title="Commodore 64">Commodore 64</a> 1541 disk image (D64 format)
+<td>Commodore 64 1541 disk image (D64 format)
 </td></tr>
 <tr>
-<td data-sort-value="4@7@4@3@5@2"><code>47 53 52 2D 31 35 34 31</code>
+<td><code>47 53 52 2D 31 35 34 31</code>
 </td>
 <td>g64
 </td>
-<td><a href="/wiki/Commodore_64" title="Commodore 64">Commodore 64</a> 1541 disk image (G64 format)
+<td>Commodore 64 1541 disk image (G64 format)
 </td></tr>
 <tr>
-<td data-sort-value="a@0@3@2@4@1"><code>A0 33 44 A0 A0</code>
+<td><code>A0 33 44 A0 A0</code>
 </td>
 <td>d81
 </td>
-<td><a href="/wiki/Commodore_64" title="Commodore 64">Commodore 64</a> 1581 disk image (D81 format)
+<td>Commodore 64 1581 disk image (D81 format)
 </td></tr>
 <tr>
-<td data-sort-value="4@3@3@6@3@4"><code>43 36 34 20 74 61 70 65 20 69 6D 61 67 65 20 66 69 6C 65</code>
+<td><code>43 36 34 20 74 61 70 65 20 69 6D 61 67 65 20 66 69 6C 65</code>
 </td>
 <td>t64
 </td>
-<td><a href="/wiki/Commodore_64" title="Commodore 64">Commodore 64</a> tape image
+<td>Commodore 64 tape image
 </td></tr>
 <tr>
-<td data-sort-value="4@3@3@6@3@4"><code>43 36 34 20 43 41 52 54 52 49 44 47 45 20 20 20</code>
+<td><code>43 36 34 20 43 41 52 54 52 49 44 47 45 20 20 20</code>
 </td>
 <td>crt
 </td>
-<td><a href="/wiki/Commodore_64" title="Commodore 64">Commodore 64</a> cartridge image
+<td>Commodore 64 cartridge image
 </td></tr>
 <tr>
-<td data-sort-value="5@3@4@9"><code>53 49 4D 50 4C 45 20 20<br> 3D 20 20 20 20 20 20 20<br> 20 20 20 20 20 20 20 20<br> 20 20 20 20 20 54</code>
+<td><code>53 49 4D 50 4C 45 20 20<br> 3D 20 20 20 20 20 20 20<br> 20 20 20 20 20 20 20 20<br> 20 20 20 20 20 54</code>
 </td>
 <td>fits
 </td>
-<td>Flexible Image Transport System (<a href="/wiki/FITS" title="FITS">FITS</a>)<sup id="cite_ref-38" class="reference"><a href="#cite_note-38">[38]</a></sup>
+<td>Flexible Image Transport System (FITS)
 </td></tr>
 <tr>
-<td data-sort-value="6@6"><code>66 4C 61 43</code>
+<td><code>66 4C 61 43</code>
 </td>
 <td>flac
 </td>
-<td><a href="/wiki/Free_Lossless_Audio_Codec" class="mw-redirect" title="Free Lossless Audio Codec">Free Lossless Audio Codec</a><sup id="cite_ref-39" class="reference"><a href="#cite_note-39">[39]</a></sup>
+<td>Free Lossless Audio Codec
 </td></tr>
 <tr>
-<td data-sort-value="4D 5@46"><code>4D 54 68 64</code>
+<td><code>4D 54 68 64</code>
 </td>
 <td>mid<br>midi
 </td>
-<td><a href="/wiki/MIDI#Standard_MIDI_files" title="MIDI">MIDI sound file</a><sup id="cite_ref-40" class="reference"><a href="#cite_note-40">[40]</a></sup>
+<td>MIDI sound file
 </td></tr>
 <tr>
 <td><code>D0 CF 11 E0 A1 B1 1A E1</code>
 </td>
 <td>doc<br>xls<br>ppt<br>msi<br>msg
 </td>
-<td><a href="/wiki/Compound_File_Binary_Format" title="Compound File Binary Format">Compound File Binary Format</a>, a container format defined by Microsoft COM. It can contain the equivalent of files and directories. It is used by <a href="/wiki/Windows_Installer" title="Windows Installer">Windows Installer</a> and for documents in older versions of <a href="/wiki/Microsoft_Office" title="Microsoft Office">Microsoft Office</a>.<sup id="cite_ref-41" class="reference"><a href="#cite_note-41">[41]</a></sup> It can be used by other programs as well that rely on the COM and OLE API's.
+<td>Compound File Binary Format, a container format defined by Microsoft COM. It can contain the equivalent of files and directories. It is used by Windows Installer and for documents in older versions of Microsoft Office It can be used by other programs as well that rely on the COM and OLE API's.
 </td></tr>
 <tr>
-<td data-sort-value="6@4"><code>64 65 78 0A 30 33 35 00</code>
+<td><code>64 65 78 0A 30 33 35 00</code>
 </td>
 <td>dex
 </td>
-<td><a href="/wiki/Dalvik_(software)" title="Dalvik (software)">Dalvik</a> Executable
+<td>Dalvik Executable
 </td></tr>
 <tr>
 <td><code>4B 44 4D</code>
 </td>
 <td>vmdk
 </td>
-<td>VMDK files<sup id="cite_ref-42" class="reference"><a href="#cite_note-42">[42]</a></sup><sup id="cite_ref-43" class="reference"><a href="#cite_note-43">[43]</a></sup>
+<td>VMDK files
 </td></tr>
 <tr>
 <td><code>23 20 44 69 73 6B 20 44 65 73 63 72 69 70 74 6F</code>
@@ -853,78 +1076,78 @@
 <td>VMware 4 Virtual Disk description file (split disk)
 </td></tr>
 <tr>
-<td data-sort-value="4@3@72"><code>43 72 32 34</code>
+<td><code>43 72 32 34</code>
 </td>
 <td>crx
 </td>
-<td><a href="/wiki/Google_Chrome" title="Google Chrome">Google Chrome</a> extension<sup id="cite_ref-44" class="reference"><a href="#cite_note-44">[44]</a></sup> or packaged app<sup id="cite_ref-45" class="reference"><a href="#cite_note-45">[45]</a></sup>
+<td>Google Chrome extension or packaged app
 </td></tr>
 <tr>
-<td data-sort-value="4@1@47"><code>41 47 44 33</code>
+<td><code>41 47 44 33</code>
 </td>
 <td>fh8
 </td>
-<td><a href="/wiki/Adobe_FreeHand" title="Adobe FreeHand">FreeHand</a> 8 document<sup id="cite_ref-46" class="reference"><a href="#cite_note-46">[46]</a></sup><sup id="cite_ref-47" class="reference"><a href="#cite_note-47">[47]</a></sup>
+<td>FreeHand 8 document
 </td></tr>
 <tr>
-<td data-sort-value="0@507"><code>05 07 00 00 42 4F 42 4F<br> 05 07 00 00 00 00 00 00<br> 00 00 00 00 00 01</code>
+<td><code>05 07 00 00 42 4F 42 4F<br> 05 07 00 00 00 00 00 00<br> 00 00 00 00 00 01</code>
 </td>
 <td>cwk
 </td>
-<td><a href="/wiki/AppleWorks" title="AppleWorks">AppleWorks</a> 5 document
+<td>AppleWorks 5 document
 </td></tr>
 <tr>
-<td data-sort-value="0@607"><code>06 07 E1 00 42 4F 42 4F<br> 06 07 E1 00 00 00 00 00<br> 00 00 00 00 00 01</code>
+<td><code>06 07 E1 00 42 4F 42 4F<br> 06 07 E1 00 00 00 00 00<br> 00 00 00 00 00 01</code>
 </td>
 <td>cwk
 </td>
-<td><a href="/wiki/AppleWorks" title="AppleWorks">AppleWorks</a> 6 document
+<td>AppleWorks 6 document
 </td></tr>
 <tr>
-<td data-sort-value="4@5@52"><code>45 52 02 00 00 00</code>
+<td><code>45 52 02 00 00 00</code>
 </td>
-<td rowspan="2">toast
+<td>toast
 </td>
-<td rowspan="2"><a href="/wiki/Roxio_Toast" title="Roxio Toast">Roxio Toast</a> disc image file
+<td>Roxio Toast disc image file
 </td></tr>
 <tr>
 <td><code>8B 45 52 02 00 00 00</code>
 </td>
 </td></tr>
 <tr>
-<td data-sort-value="Z"><code>6B 6F 6C 79</code>
+<td><code>6B 6F 6C 79</code>
 </td>
 <td>dmg
 </td>
-<td><a href="/wiki/Apple_Disk_Image" title="Apple Disk Image">Apple Disk Image</a> file
+<td>Apple Disk Image</a> file
 </td></tr>
 <tr>
-<td data-sort-value="7@8@6"><code>78 61 72 21</code>
+<td><code>78 61 72 21</code>
 </td>
 <td>xar
 </td>
-<td><a href="/wiki/Xar_(archiver)" title="Xar (archiver)">eXtensible ARchive</a> format<sup id="cite_ref-48" class="reference"><a href="#cite_note-48">[48]</a></sup>
+<td>eXtensible ARchive format
 </td></tr>
 <tr>
-<td data-sort-value="5@0@4D4F"><code>50 4D 4F 43 43 4D 4F 43</code>
+<td><code>50 4D 4F 43 43 4D 4F 43</code>
 </td>
 <td>dat
 </td>
-<td>Windows Files And Settings Transfer Repository<sup id="cite_ref-49" class="reference"><a href="#cite_note-49">[49]</a></sup> See also USMT 3.0 (Win XP)<sup id="cite_ref-50" class="reference"><a href="#cite_note-50">[50]</a></sup> and USMT 4.0 (Win 7)<sup id="cite_ref-51" class="reference"><a href="#cite_note-51">[51]</a></sup> User Guides
+<td>Windows Files And Settings Transfer Repository See also USMT 3.0 (Win XP) and USMT 4.0 (Win 7) User Guides
 </td></tr>
 <tr>
 <td><code>4E 45 53 1A</code>
 </td>
 <td>nes
 </td>
-<td>Nintendo Entertainment System ROM file<sup id="cite_ref-52" class="reference"><a href="#cite_note-52">[52]</a></sup>
+<td>Nintendo Entertainment System ROM file
 </td></tr>
 <tr>
-<td data-sort-value="O257"><code>75 73 74 61 72 00 30 30</code><br><code>75 73 74 61 72 20 20 00</code>
+<td><code>75 73 74 61 72 00 30 30</code><br><code>75 73 74 61 72 20 20 00</code>
 </td>
 <td>tar
 </td>
-<td><a href="/wiki/Tar_(computing)" title="Tar (computing)">tar archive</a><sup id="cite_ref-53" class="reference"><a href="#cite_note-53">[53]</a></sup>
+<td>tar archive
 </td></tr>
 <tr>
 <td><code>4F 41 52&nbsp;??</code>
@@ -934,28 +1157,28 @@
 <td>OAR file archive format, where&nbsp;?? is the format version.
 </td></tr>
 <tr>
-<td data-sort-value="7@4"><code>74 6F 78 33</code>
+<td><code>74 6F 78 33</code>
 </td>
 <td>tox
 </td>
-<td>Open source portable voxel file<sup id="cite_ref-54" class="reference"><a href="#cite_note-54">[54]</a></sup>
+<td>Open source portable voxel file
 </td></tr>
 <tr>
 <td><code>4D 4C 56 49</code>
 </td>
 <td>MLV
 </td>
-<td><a href="/wiki/Magic_Lantern_(firmware)" title="Magic Lantern (firmware)">Magic Lantern</a> Video file<sup id="cite_ref-55" class="reference"><a href="#cite_note-55">[55]</a></sup>
+<td>Magic Lantern Video file
 </td></tr>
 <tr>
-<td data-sort-value="4@4@43"><code>44 43 4D 01 50 41 33 30</code><br><code>50 41 33 30</code>
+<td><code>44 43 4D 01 50 41 33 30</code><br><code>50 41 33 30</code>
 </td>
 <td>
 </td>
-<td>Windows Update <a href="/wiki/Binary_delta_compression" title="Binary delta compression">Binary Delta Compression</a> file<sup id="cite_ref-56" class="reference"><a href="#cite_note-56">[56]</a></sup>
+<td>Windows Update Binary Delta Compression file
 </td></tr>
 <tr>
-<td data-sort-value="3@7@7"><code>37 7A BC AF 27 1C</code>
+<td><code>37 7A BC AF 27 1C</code>
 </td>
 <td>7z
 </td>

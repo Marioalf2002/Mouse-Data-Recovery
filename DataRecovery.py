@@ -1,6 +1,35 @@
 import os # Módulo para interactuar con el sistema operativo
 import time # Módulo para trabajar con fechas y horas
 from datetime import timedelta # Clase para representar un intervalo de tiempo
+import hashlib # Módulo para calcular resúmenes de mensajes y códigos hash
+
+# La cantidad de bytes a leer depende de la capacidad del disco duro o memoria USB
+# Tambien depende de cuanta ram tenga el sistema operativo
+# Gama Baja 512 bytes y 2048 bytes
+# Gama Media 2048 bytes a 8192 bytes
+# Gama Alta 8192 bytes y 65536 bytes o más
+size = 16777216  # Tamaño del bloque de lectura
+
+# Directorio a escanear en busca de archivos para recuperar
+drive = "\\\\.\\D:" # Disco duro o memoria USB a escanear
+ruta_salida_base = "D:\\recuperados" # Directorio de salida para los archivos recuperados
+total_time = 0  # Variable para almacenar el tiempo total transcurrido
+
+# Función para formatear un timedelta como una cadena
+def strfdelta(tdelta, fmt):
+    d = {"days": tdelta.days} # Crear un diccionario con los días transcurridos
+    d["hours"], rem = divmod(tdelta.seconds, 3600) # Calcular las horas transcurridas
+    d["minutes"], d["seconds"] = divmod(rem, 60) # Calcular los minutos y segundos transcurridos
+    return fmt.format(**d) # Formatear la cadena con los valores del diccionario
+
+# Calcular el hash MD5 de un archivo
+def generate_file_hash(file_path):
+    hash_md5 = hashlib.md5() # Crear un objeto hash MD5
+    with open(file_path, "rb") as file: # Leer el archivo en modo binario
+        # Leer el archivo en bloques del valor de la variable size
+        for chunk in iter(lambda: file.read(size), b""):
+            hash_md5.update(chunk) # Actualizar el hash MD5 con el bloque actual
+    return hash_md5.hexdigest() # Retornar el hash MD5 en formato hexadecimal
 
 # Recuperar archivos de un disco duro o memoria USB
 def recover_files(drive, signature, tipo, output_dir):
@@ -10,69 +39,85 @@ def recover_files(drive, signature, tipo, output_dir):
     try:
         # Leer el disco duro o memoria USB
         with open(drive, "rb") as fileD:
-            size = 4096 # Tamaño de bloque/buffer a leer
-            offs = 0 # Desplazamiento de bytes
+            offs = 0 # Desplazamiento de lectura
             rcvd = 0 # Contador de archivos recuperados
-            recoveredPositions = set()  # Almacenar posiciones de archivos recuperados para evitar duplicados
+            recoveredPositions = {} # Diccionario para almacenar las posiciones de los archivos recuperados
 
-            # Leer el disco duro o memoria USB en bloques de tamaño 'size'
+            # Leer el disco duro o memoria USB en bloques de 4096 bytes
             while True:
-                byte = fileD.read(size) # Leer un bloque de tamaño 'size'
-                
-                # Si no hay más bloques por leer, salir del bucle
+                byte = fileD.read(size) # Leer un bloque de 4096 bytes
+
+                # Si no se lee ningún byte, salir del bucle
                 if not byte:
                     break
 
-                # Buscar la firma hexadecimal en el bloque leído
-                found = byte.find(bytes.fromhex(signature))
+                found = byte.find(bytes.fromhex(signature)) # Buscar la firma hexadecimal en el bloque leído
 
-                # Si se encuentra la firma hexadecimal en el bloque leído
+                # Si se encuentra la firma hexadecimal, recuperar el archivo
                 if found >= 0:
-                    elapsed_time = timedelta(seconds=time.time() - start_time)  # Calcular el tiempo transcurrido
-                    print(f'=============>Tiempo transcurrido: {elapsed_time} <=============\n')  # Mostrar el tiempo transcurrido
+                    elapsed_time_seconds = time.time() - start_time  # Calcular el tiempo transcurrido en segundos
+
+                    # Formatear el tiempo transcurrido en el formato deseado
+                    elapsed_time_str = strfdelta(timedelta(seconds=int(elapsed_time_seconds)), "{days}:{hours}:{minutes}")
+
+                    print(f'=============>Tiempo transcurrido: {elapsed_time_str} <=============\n') # Mostrar el tiempo transcurrido
+
                     print(f'=============> Archivo encontrado en la ubicación: {str(hex(found+(size*offs)))} <=============') # Mostrar la ubicación del archivo encontrado
 
-                    # Verificar si ya se ha recuperado un archivo en esta posición
+                    # Verificar si la posición de recuperación ya está en el diccionario
                     if offs not in recoveredPositions:
-                        # Crear el archivo recuperado
-                        with open(os.path.join(output_dir, f'{rcvd}.{tipo.lower()}'), "wb") as fileN:
-                            fileN.write(byte[found:]) # Escribir el bloque leído desde la firma hexadecimal encontrada
-                            recoveredPositions.add(offs) # Almacenar la posición del archivo recuperado
+                        recoveredPositions[offs] = set()  # Usar un conjunto para almacenar hashes de archivos recuperados en esta posición
 
-                            # Leer el disco duro o memoria USB en bloques de tamaño 'size'
+                    # Leer el archivo desde la firma hexadecimal encontrada
+                    file_content = byte[found:] # Leer el archivo desde la firma hexadecimal encontrada
+                    file_hash = hashlib.md5(file_content).hexdigest() # Calcular el hash MD5 del contenido del archivo
+
+                    # Verificar si el hash del contenido del archivo ya está en los archivos recuperados en esta posición
+                    if file_hash not in recoveredPositions[offs]:
+                        file_path = os.path.join(output_dir, f'{rcvd}.{tipo.lower()}') # Crear la ruta del archivo recuperado
+
+                        # Escribir el archivo recuperado en la carpeta de salida
+                        with open(file_path, "wb") as fileN:
+                            fileN.write(file_content) # Escribir el contenido del archivo
+                            recoveredPositions[offs].add(file_hash)  # Agregar el hash del archivo recuperado
+                            
+                            # Leer el resto del archivo desde el bloque actual
                             while True:
-                                byte = fileD.read(size) # Leer un bloque de tamaño 'size'
+                                byte = fileD.read(size) # Leer un bloque de 4096 bytes
                                 bfind = byte.find(bytes.fromhex(signature)) # Buscar la firma hexadecimal en el bloque leído
 
-                                # Si se encuentra la firma hexadecimal en el bloque leído
+                                # Si se encuentra la firma hexadecimal, escribir el archivo recuperado
                                 if bfind >= 0:
-                                    fileN.write(byte[:bfind+len(bytes.fromhex(signature))]) # Escribir el bloque leído desde la firma hexadecimal encontrada
+                                    fileN.write(byte[:bfind+len(bytes.fromhex(signature))]) # Escribir el archivo recuperado
                                     offs += byte[:bfind+len(bytes.fromhex(signature))].count(b'\n') # Actualizar el desplazamiento
                                     print(f'=============> Escribiendo archivo en la ubicación: {rcvd}.{tipo.lower()} <=============\n') # Mostrar la ubicación del archivo recuperado
-                                    recoveredPositions.add(offs) # Almacenar la posición del archivo recuperado
-                                    rcvd += 1 # Actualizar el contador de archivos recuperados
                                     break
                                 else:
                                     fileN.write(byte) # Escribir el bloque leído
+                        rcvd += 1 # Incrementar el contador de archivos recuperados
                     else:
-                        # Si ya se recuperó un archivo en esta posición, avanzar el desplazamiento
-                        offs += byte.count(b'\n')
+                        offs += byte.count(b'\n') # Actualizar el desplazamiento
 
-                offs += 1 # Actualizar el desplazamiento
+                offs += 1 # Incrementar el desplazamiento
 
     except Exception as e:
         print(f"Error: {e}\n") # Mostrar mensaje de error
 
     end_time = time.time()  # Capturar el tiempo de finalización
-    elapsed_time = timedelta(seconds=end_time - start_time)  # Calcular el tiempo transcurrido
-    print(f'=============>Tiempo transcurrido para recuperar archivos de tipo {tipo}: {elapsed_time} <=============\n')
-    return elapsed_time.total_seconds()  # Retornar el tiempo transcurrido en segundos
+    elapsed_time_seconds = end_time - start_time  # Calcular el tiempo transcurrido en segundos
+
+    # Formatear el tiempo transcurrido en el formato deseado
+    elapsed_time_str = strfdelta(timedelta(seconds=int(elapsed_time_seconds)), "{days}:{hours}:{minutes}")
+
+    print(f'=============>Tiempo transcurrido para recuperar archivos de tipo {tipo}: {elapsed_time_str} <=============\n') # Mostrar el tiempo transcurrido
+
+    return elapsed_time_seconds  # Retornar el tiempo transcurrido en segundos
 
 # Lista de tipos de archivo con sus respectivas firmas hexadecimales
 def main():
     tipos_archivo = [
-        ("PNG", "89504E470D0A1A0A"),  # Archivo de imagen PNG
-        ("JPEG", "FFD8FFE0"),  # Archivo de imagen JPEG
+        # ("JPEG", "FFD8FFE0"),  # Archivo de imagen JPEG
+        # ("PNG", "89504E470D0A1A0A"),  # Archivo de imagen PNG
         ("AI", "255044462D312E"),  # Archivo Adobe Illustrator
         ("EPS", "252150532D41646F6265"),  # Archivo Encapsulated PostScript
         ("INDD", "06054B50"),  # Archivo Adobe InDesign
@@ -81,12 +126,9 @@ def main():
         ("BMP", "424D"),  # Archivo de imagen BMP
         ("TIFF", "49492A00"),  # Archivo de imagen TIFF (Intel)
         ("TIFF", "4D4D002A"),  # Archivo de imagen TIFF (Motorola)
-        ("PDF", "25504446"),  # Archivo Adobe PDF (repetido, parece ser un error en la lista original)
-        ("INDD", "494E4444"),  # Archivo Adobe InDesign (repetido, parece ser un error en la lista original)
         ("FLA", "464C5601"),  # Archivo Adobe Flash FLA
         ("SWF", "435753"),  # Archivo Adobe Flash SWF
         ("F4V", "464432"),  # Archivo de video Adobe Flash F4V
-        ("IND", "494E44"),  # Archivo Adobe InDesign (repetido, parece ser un error en la lista original)
         # ("GIF", "47494638"),  # Archivo de imagen GIF
         # ("MP3", "FFF8"),  # Archivo de audio MP3
         # ("MP4", "66747970"),  # Archivo de video MP4
@@ -114,11 +156,6 @@ def main():
         # ("ODS", "504B0304"),  # Archivo de documento OpenDocument ODS
         # ("ODP", "504B0304"),  # Archivo de documento OpenDocument ODP
     ]
-
-    # Directorio a escanear en busca de archivos para recuperar
-    drive = "\\\\.\\D:" # Disco duro o memoria USB
-    ruta_salida_base = "D:\\recuperados" # Directorio de salida para los archivos recuperados
-    total_time = 0  # Variable para almacenar el tiempo total transcurrido
 
     # Recuperar archivos para cada tipo de archivo en la lista
     for tipo, firma_hex in tipos_archivo:
